@@ -1,0 +1,39 @@
+<div class="container">
+
+    <legend>Step 2: Movies Selection</legend>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>{{movies.Category}}</h3>
+        </div>
+    </div>
+
+    <span ng-repeat="movie in movies.Movies">
+        <div ng-if="$index%5==0" class="row newRow"></div>
+        <div class="col-md-2">
+            <div class="movie-container">
+                <h5 class="text-center">{{movie.Title}}</h5>
+                <img ng-src="images/thumbs/{{movie.Img}}" alt="" class="movie img-responsive">
+                <button ng-disabled="isInCart(movie)" class="btn btn-block btn-primary" ng-click="addMovie(movie)">
+                    <i class="glyphicon glyphicon-plus"></i> Add Favorite
+                </button>
+            </div>
+        </div>
+    </span>
+
+</div>
+
+
+<div id="cart" ng-if="selectedMovies.length > 0">
+    <h5>
+        <legend>Movie Cart</legend>
+    </h5>
+    <ul ng-repeat="movie in selectedMovies">
+        <li>
+            <p>
+                <a ng-click="removeFromCart(movie)" class="text-right remove-cart"><i
+                        class="glyphicon glyphicon-remove alert-danger"></i></a> {{movie.Title}}
+            </p>
+        </li>
+    </ul>
+    <button class="btn btn-primary text-center btn-block" ng-click="finishAddMovies()">Finish</button>
+</div>
