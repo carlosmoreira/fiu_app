@@ -1,1 +1,11 @@
-<h2>Confirmation</h2>
+<div class="container">
+    <legend>Confirmation</legend>
+    <h4>Thank you, {{user.firstName}} {{user.lastName}} for participating...blah blah blah some words here....</h4>
+    <h5>Your Selected Movies In Order:</h5>
+    <ul ng-repeat="movie in movies">
+        <li>
+            {{$index+1}} - {{movie.Title}}
+        </li>
+    </ul>
+
+</div>

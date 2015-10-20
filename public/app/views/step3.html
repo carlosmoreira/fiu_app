@@ -1,13 +1,42 @@
 <div class="container">
     <legend>Step 3: Movie Order</legend>
 
-    <div class="col-md-8">
+    <div class="col-md-8" >
+        <p>Please watch a short video clip of each movie and order the movies starting from your most favorite.</p>
+        <ul ui-sortable="sortOptions" ng-model="movies">
+            <li ng-repeat="movie in movies" class="draggable-movie">
+                <h2>{{$index + 1}} - {{movie.Title}}</h2>
+                <h2 class="pull-right play" ng-click="playMovie(movie)">
+                    <i class="glyphicon glyphicon-play"></i>
+                </h2>
+            </li>
+        </ul>
+        <button class="btn btn-fiu" ng-click="finishOrdering()">Finish</button>
+    </div>
 
-        <div ng-repeat="movie in movies">
-            <div class="col-md-12 movie-order">
-                <h2>{{movie.Title}}</h2>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="playMovieModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{selectedMovie.Title}}</h4>
+            </div>
+            <div class="modal-body">
+                <video id="vidSample" class="video-js vjs-default-skin"
+                       controls preload="auto" width="640" height="264"
+                       poster="images/thumbs/familyguy.jpg"
+                       data-setup='{"example_option":true}'>
+                    <source src="videos/familyguy.mp4" type='video/mp4' />
+                    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                </video>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-
     </div>
 </div>

@@ -1,6 +1,6 @@
 var fiuMovies =
 
-    angular.module('fiuMovies', ['ngRoute'])
+    angular.module('fiuMovies', ['ngRoute', 'ui.sortable'])
 
         .config(function ($routeProvider) {
 
@@ -9,19 +9,19 @@ var fiuMovies =
             $routeProvider
                 .when('/', {
                     controller: 'stepOneController',
-                    templateUrl: tmpl  + 'step1.html',
+                    templateUrl: tmpl + 'step1.html',
                 })
                 .when('/stepTwo', {
                     controller: 'stepTwoController',
-                    templateUrl: tmpl  + 'step2.html',
+                    templateUrl: tmpl + 'step2.html',
                 })
                 .when('/stepThree', {
                     controller: 'stepThreeController',
-                    templateUrl: tmpl  + 'step3.html',
+                    templateUrl: tmpl + 'step3.html',
                 })
                 .when('/stepFour', {
                     controller: 'stepFourController',
-                    templateUrl: tmpl  + 'step4.html',
+                    templateUrl: tmpl + 'step4.html',
                 })
                 .otherwise({
                     redirectTo: '/'
@@ -32,56 +32,65 @@ fiuMovies.controller('MainCtrl', function ($scope) {
 
 });
 
-fiuMovies.factory('User', function(){
+fiuMovies.factory('User', function () {
 
     var user = null;
 
-    var setUser = function(u){
+    var setUser = function (u) {
         user = u;
     }
 
-    var getUser = function(){
+    var getUser = function () {
         return user;
     }
 
     return {
-        getUser : getUser,
-        setUser : setUser
+        getUser: getUser,
+        setUser: setUser
     }
 });
 
-fiuMovies.factory('moviesCart', function(){
+fiuMovies.factory('moviesCart', function () {
 
     var movies = [];
+    var orderedMovies = [];
 
-    var broadCast = function(){
+    var broadCast = function () {
         //$rootScope.$broadcast('movieCartChange');
     }
 
-    var add = function(movie){
+    var setOrderMovies = function(movies){
+        orderedMovies = movies;
+    }
+
+    var getOrderedMovies = function(){
+        return orderedMovies;
+    }
+
+    var add = function (movie) {
         movies.push(movie);
         broadCast();
     };
 
-    var remove = function(movie){
-        for(var i = 0; i<movies.length ; i++){
-            if(movie.Id == movies[i].Id){
+    var remove = function (movie) {
+        for (var i = 0; i < movies.length; i++) {
+            if (movie.Id == movies[i].Id) {
                 movies.splice(i, 1);
             }
         }
     };
 
-    var get = function(movie){
+    var get = function (movie) {
         return movies;
     };
 
-    var getAll = function(){
+    var getAll = function () {
         return movies;
     };
 
-    var isInCart = function(movie){
-        for(var i = 0; i<movies.length ; i++){
-            if(movie.Id == movies[i].Id){
+    var isInCart = function (movie) {
+        for (var i = 0; i < movies.length; i++) {
+            if (movie.Id == movies[i].Id) {
                 return true;
             }
         }
@@ -89,85 +98,163 @@ fiuMovies.factory('moviesCart', function(){
     }
 
     return {
-        add : add,
-        remove : remove,
-        get : get,
-        getAll : getAll,
-        isInCart : isInCart
+        add: add,
+        remove: remove,
+        get: get,
+        getAll: getAll,
+        isInCart: isInCart,
+        setOrderMovies : setOrderMovies,
+        getOrderedMovies : getOrderedMovies
     }
 });
 
 
 fiuMovies.controller('stepOneController', function ($scope, $location, User) {
-    $scope.user = {
-        firstName : "Carlos",
-        lastName : "Moreira",
-        email : "user@fiu.edu"
-    }
-    $scope.finishStep1 = function(){
+    //$scope.user = {
+    //    firstName: "Carlos",
+    //    lastName: "Moreira",
+    //    email: "user@fiu.edu"
+    //}
+    $scope.finishStep1 = function () {
         User.setUser($scope.user);
         $location.path('stepTwo');
     }
 });
 
 
-fiuMovies.service('MovieService', function($http){
+fiuMovies.service('MovieService', function ($http) {
     return {
-        all : function(){
+        all: function () {
             return $http.get('api/movies');
         }
     }
 });
 
-fiuMovies.controller('stepTwoController', function ($scope, $location, moviesCart, MovieService ) {
+fiuMovies.controller('stepTwoController', function ($scope, $location, moviesCart, MovieService) {
 
-    $scope.movies  = null;
+    $scope.movies = null;
 
 
-    MovieService.all().then(function(response){
+    MovieService.all().then(function (response) {
         $scope.movies = response.data;
         console.log(response.data);
-    }, function(err){
+    }, function (err) {
         console.log(err)
     });
 
-    var getSelectedMovies = function(){
+    var getSelectedMovies = function () {
         $scope.selectedMovies = moviesCart.getAll();
     }
 
-    $scope.addMovie = function(movie){
+    $scope.addMovie = function (movie) {
         moviesCart.add(movie);
         getSelectedMovies();
     }
 
 
-    $scope.finshAdding = function(){
+    $scope.finshAdding = function () {
         $location.path('stepthree')
     };
 
-    $scope.removeFromCart = function(movie){
+    $scope.removeFromCart = function (movie) {
         moviesCart.remove(movie);
         getSelectedMovies();
     };
 
-    $scope.isInCart = function(movie){
+    $scope.isInCart = function (movie) {
         return moviesCart.isInCart(movie);
     }
 
-    $scope.finishAddMovies = function(){
+    $scope.finishAddMovies = function () {
 
         $location.path('stepThree');
 
     }
 });
 
-fiuMovies.controller('stepThreeController', function ($scope, moviesCart , $location) {
+fiuMovies.controller('stepThreeController', function ($scope, moviesCart, $location) {
 
     $scope.movies = moviesCart.getAll();
     console.log("all", moviesCart.getAll());
 
+    //$scope.movies = [
+    //    {
+    //        "Id": 1,
+    //        "Title": "Big Bang Theory",
+    //        "Img": "bigbangtheory.jpg",
+    //        "Video": "bigbangtheory.flv",
+    //        "Category": "Comedy"
+    //    },
+    //    {
+    //        "Id": 7,
+    //        "Title": "Family Guy",
+    //        "Img": "familyguy.jpg",
+    //        "Video": "familyguy.flv",
+    //        "Category": "Comedy"
+    //    },
+    //    {
+    //        "Id": 8,
+    //        "Title": "Friends",
+    //        "Img": "friends.jpg",
+    //        "Video": "Friends.flv",
+    //        "Category": "Comedy"
+    //    },
+    //    {
+    //        "Id": 10,
+    //        "Title": "Futurama",
+    //        "Img": "futurama.jpg",
+    //        "Video": "futurama.flv",
+    //        "Category": "Comedy"
+    //    },
+    //    {
+    //        "Id": 15,
+    //        "Title": "How I Met Your Mother",
+    //        "Img": "howImet.jpg",
+    //        "Video": "howImet.flv",
+    //        "Category": "Comedy"
+    //    },
+    //    {
+    //        "Id": 20,
+    //        "Title": "The Cleveland Show",
+    //        "Img": "cleveland.jpg",
+    //        "Video": "cleveland.flv",
+    //        "Category": "Comedy"
+    //    }
+    //];
+
+    $scope.sortOptions = {
+        'ui-floating': true,
+        update: function (e, ui) {
+            console.log($scope.movies);
+        }
+    }
+
+    $scope.finishOrdering = function () {
+        swal({
+            title: "Are you sure?",
+            text: "This is the last step, You will not be able to change your answers. Are you sure you want to finish?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, I'm Done!",
+            closeOnConfirm: true
+        }, function () {
+            moviesCart.setOrderMovies($scope.movies);
+            $location.path('stepFour');
+            $scope.$apply();
+            //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+        });
+        console.log($scope.movies);
+    }
+
+    $scope.playMovie = function (movie) {
+        console.log(movie);
+        $scope.selectedMovie = movie;
+        $('#playMovieModal').modal('show')
+    }
 });
 
-fiuMovies.controller('stepFourController', function ($scope, $location) {
-
+fiuMovies.controller('stepFourController', function ($scope,User,moviesCart) {
+    $scope.user = User.getUser();
+    $scope.movies = moviesCart.getOrderedMovies();
 });
