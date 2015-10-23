@@ -23,6 +23,13 @@ class MovieController extends Controller
        return $data;
     }
 
+    public function adminIndex(){
+        $movies = Movie::all();
+        return view('movies/index', [
+            'movies' => $movies
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -30,7 +37,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        return view('movies/create');
     }
 
     /**
@@ -41,7 +48,47 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $movie = new Movie();
+
+        if ($request->hasFile('Img')) {
+            if ($request->file('Img')->isValid())
+            {
+                $fileName = $request->file('Img')->getClientOriginalName();
+                $fileName = str_replace(" ", "", $fileName);
+                $request->file('Img')->move(base_path()."/public/images/thumbs/", $fileName);
+                $movie->Img = $fileName;
+            }else{
+                die('Error Upload 1');
+            }
+        }else{
+            die('Error Upload 2');
+        }
+
+
+
+        if ($request->hasFile('Video')) {
+            if ($request->file('Video')->isValid())
+            {
+                $fileName = $request->file('Video')->getClientOriginalName();
+                $fileName = str_replace(" ", "", $fileName);
+                echo $fileName;
+                $request->file('Video')->move(base_path()."/public/videos/", $fileName);
+                $movie->Video = $fileName;
+            }else{
+                die('Error Upload 1');
+            }
+        }else{
+            die('Error Upload 2');
+        }
+
+        $movie->Title = $request->Title;
+        $movie->Category = $request->Category;
+
+        $movie->save();
+
+
+        return redirect('/admin/movies');
     }
 
     /**
@@ -63,7 +110,8 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        //
+        $movie = Movie::find($id);
+        return view('movies/update', ['movie' => $movie]);
     }
 
     /**
@@ -73,9 +121,25 @@ class MovieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+
+        $m = Movie::findorFail($request->id);
+
+        $m->Title = $request->Title;
+        $m->Category = $request->Category;
+
+        $m->save();
+
+
+//        $movie = \App\Movie::find(1);
+//
+//        $movie->Title = "TESTING!"; //$request->title;
+//        //$movie->Category = $request->Category;
+//        echo $movie->save();
+        //var_dump($movie);
+        return \Redirect::to('/admin/movies/update/'.$request->id)->with('message', 'Movie Updated');
+
     }
 
     /**

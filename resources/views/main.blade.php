@@ -27,7 +27,6 @@
         <div class="row">
             <div class="col-md-12">
                 <h2 class="pull-left">Fiu Movies</h2>
-                <img width="200" src="images/fiu.png" alt="" class="pull-right">
             </div>
         </div>
     </div>

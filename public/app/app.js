@@ -172,7 +172,7 @@ fiuMovies.controller('stepTwoController', function ($scope, $location, moviesCar
     }
 });
 
-fiuMovies.controller('stepThreeController', function ($scope, moviesCart, $location) {
+fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart, $location, User) {
 
     $scope.movies = moviesCart.getAll();
     console.log("all", moviesCart.getAll());
@@ -240,9 +240,17 @@ fiuMovies.controller('stepThreeController', function ($scope, moviesCart, $locat
             closeOnConfirm: true
         }, function () {
             moviesCart.setOrderMovies($scope.movies);
-            $location.path('stepFour');
-            $scope.$apply();
-            //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+            
+            $http.post('api/result', {
+                'user' : User.getUser(),
+                'movies' : $scope.movies
+            }).then(function(response){
+                console.log(response);
+                $location.path('stepFour');
+                //$scope.$apply();
+            }, function(err){console.log(err);})
+
+
         });
         console.log($scope.movies);
     }

@@ -2,7 +2,7 @@
     <legend>Step 3: Movie Order</legend>
 
     <div class="col-md-8" >
-        <p>Please watch a short video clip of each movie and order the movies starting from your most favorite.</p>
+        <p>Here are the clips in your playlist. You can change the order of the clips you would like to see first by dragging the titles up and down. If you are ready watching just click the play button next to each title. Please try to watch as many as you can from your list.</p>
         <ul ui-sortable="sortOptions" ng-model="movies">
             <li ng-repeat="movie in movies" class="draggable-movie">
                 <h2>{{$index + 1}} - {{movie.Title}}</h2>
