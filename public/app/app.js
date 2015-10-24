@@ -89,8 +89,10 @@ fiuMovies.factory('moviesCart', function () {
     };
 
     var isInCart = function (movie) {
+        //console.log(movie);
         for (var i = 0; i < movies.length; i++) {
-            if (movie.Id == movies[i].Id) {
+            if (movie.id == movies[i].id) {
+                //console.log("Found: ", movie.Id);
                 return true;
             }
         }
@@ -253,16 +255,54 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
 
         });
         console.log($scope.movies);
-    }
+    };
+
+    var updateMovie = function(movie){
+        var movies = $scope.movies;
+        for(var i = 0 ; i < movies.length ; i++){
+            if(movie.Id == movies[i].Id){
+                movies[i] = movie;
+            }
+        }
+        $scope.movies = null;
+        $scope.movies = movies;
+    };
 
     $scope.playMovie = function (movie) {
         console.log(movie);
         $scope.selectedMovie = movie;
-        $('#playMovieModal').modal('show')
-    }
+        $('#playMovieModal').modal('show');
+        $('#playMovieModal').on('hidden.bs.modal', function () {
+            //alert('modal Close');
+
+            videojs('vidSample').player().pause()
+            var playTime = videojs('vidSample').player().currentTime();
+            if(playTime > 0){
+                $scope.selectedMovie.played = 1;
+                $scope.selectedMovie.watched_length = playTime;
+                updateMovie($scope.selectedMovie);
+            }else{
+                console.log('never played');
+            }
+        });
+
+    };
+
+
+
 });
 
 fiuMovies.controller('stepFourController', function ($scope,User,moviesCart) {
     $scope.user = User.getUser();
     $scope.movies = moviesCart.getOrderedMovies();
 });
+
+
+
+
+
+
+
+
+
+

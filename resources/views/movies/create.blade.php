@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-md-3">
-            <label for="video">Video</label>
+            <label for="video">Video (Type: .mp4)</label>
             <?php echo Form::file('Video'); ?>
         </div>
         <div class="col-md-3">

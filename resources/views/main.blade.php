@@ -16,7 +16,7 @@
     <script src="libs/angular-ui-sortable/sortable.min.js"></script>
 
     <link href="http://vjs.zencdn.net/5.0.0/video-js.css" rel="stylesheet">
-
+    <script src="libs/video.js/dist/video.min.js"></script>
     <!-- If you'd like to support IE8 -->
     <script src="http://vjs.zencdn.net/ie8/1.1.0/videojs-ie8.min.js"></script>
 </head>
