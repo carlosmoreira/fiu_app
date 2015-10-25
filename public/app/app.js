@@ -257,37 +257,43 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
         console.log($scope.movies);
     };
 
-    var updateMovie = function(movie){
-        var movies = $scope.movies;
-        for(var i = 0 ; i < movies.length ; i++){
-            if(movie.Id == movies[i].Id){
-                movies[i] = movie;
-            }
-        }
-        $scope.movies = null;
-        $scope.movies = movies;
-    };
 
     $scope.playMovie = function (movie) {
         console.log(movie);
         $scope.selectedMovie = movie;
+
+
         $('#playMovieModal').modal('show');
+
+
+
+        $( "#playMovieModal" ).on('shown.bs.modal', function(){
+            videojs('vidSample');
+        });
+
         $('#playMovieModal').on('hidden.bs.modal', function () {
             //alert('modal Close');
 
-            videojs('vidSample').player().pause()
-            var playTime = videojs('vidSample').player().currentTime();
+            var playingVid = videojs('vidSample').player();
+
+            playingVid.pause();
+
+            var playTime = parseFloat(playingVid.currentTime());
             if(playTime > 0){
-                $scope.selectedMovie.played = 1;
-                $scope.selectedMovie.watched_length = playTime;
-                updateMovie($scope.selectedMovie);
+                movie.played = 1;
+                movie.watched_length = playTime;
+                console.log(movie.Title + " played for " + playTime);
+
             }else{
-                console.log('never played');
+                console.log('never played: ' + playTime);
             }
         });
 
     };
 
+    $scope.getMovieSrc = function(movie){
+        return "videos/"+movie.Video;
+    }
 
 
 });

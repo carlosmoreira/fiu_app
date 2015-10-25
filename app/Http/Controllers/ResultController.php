@@ -52,9 +52,9 @@ class ResultController extends Controller
         foreach($request['movies'] as $movie){
             $movieSelection = new MovieSelection();
             $movieSelection->result_id = $result->id;
-            $movieSelection->movie_id = $movie['Id'];
+            $movieSelection->movie_id = $movie['id'];
             $movieSelection->played = (isset($movie['played'])) ? 1 : 0;
-            $movieSelection->watched_length = (isset($movie['watched_length'])) ? 1 : 0;
+            $movieSelection->watched_length = (isset($movie['watched_length'])) ? $movie['watched_length'] : 0;
             $movieSelection->position = $pos;
             $movieSelection->save();
             $pos++;
