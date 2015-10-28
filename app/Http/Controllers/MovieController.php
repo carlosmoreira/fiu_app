@@ -62,7 +62,7 @@ class MovieController extends Controller
                 die('Error Upload 1');
             }
         }else{
-            die('Error Upload 2');
+            //die('Error Upload 2');
         }
 
 
@@ -79,7 +79,7 @@ class MovieController extends Controller
                 die('Error Upload 1');
             }
         }else{
-            die('Error Upload 2');
+            //die('Error Upload 2');
         }
 
         $movie->Title = $request->Title;
@@ -148,8 +148,15 @@ class MovieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        if(!$request->has('idtoremove')){
+            echo json_encode(['Error'=>'Must Pass ID']);
+        }
+        $id = $request->get('idtoremove');
+        if(Movie::destroy($id)){
+            echo json_encode(['Success' => 'Deleted Item']);
+        }
+
     }
 }

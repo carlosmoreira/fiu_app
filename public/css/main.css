@@ -74,6 +74,6 @@ img.movie{
     box-shadow: 1px 1px 14px #88888E;
 }
 
-#vidSample{
+.vjs-tech, .video-js{
     width:100%;
 }

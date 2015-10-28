@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/movies/store/',['uses' => 'MovieController@store']);
     Route::get('/admin/movies/update/{id}',['uses' => 'MovieController@edit']);
     Route::post('/admin/movies/update/',['uses' => 'MovieController@update']);
+    Route::get('/admin/movies/delete/',['uses' => 'MovieController@destroy']);
 });
 
 

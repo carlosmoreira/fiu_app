@@ -179,44 +179,48 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
     $scope.movies = moviesCart.getAll();
     console.log("all", moviesCart.getAll());
 
+    var moviesPlayedOrder = [];
+
+
+
     //$scope.movies = [
     //    {
-    //        "Id": 1,
+    //        "id": 1,
     //        "Title": "Big Bang Theory",
     //        "Img": "bigbangtheory.jpg",
-    //        "Video": "bigbangtheory.flv",
+    //        "Video": "bigbangtheory.mp4",
     //        "Category": "Comedy"
     //    },
     //    {
-    //        "Id": 7,
+    //        "id": 7,
     //        "Title": "Family Guy",
     //        "Img": "familyguy.jpg",
-    //        "Video": "familyguy.flv",
+    //        "Video": "familyguy.mp4",
     //        "Category": "Comedy"
     //    },
     //    {
-    //        "Id": 8,
+    //        "id": 8,
     //        "Title": "Friends",
     //        "Img": "friends.jpg",
     //        "Video": "Friends.flv",
     //        "Category": "Comedy"
     //    },
     //    {
-    //        "Id": 10,
+    //        "id": 10,
     //        "Title": "Futurama",
     //        "Img": "futurama.jpg",
     //        "Video": "futurama.flv",
     //        "Category": "Comedy"
     //    },
     //    {
-    //        "Id": 15,
+    //        "id": 15,
     //        "Title": "How I Met Your Mother",
     //        "Img": "howImet.jpg",
     //        "Video": "howImet.flv",
     //        "Category": "Comedy"
     //    },
     //    {
-    //        "Id": 20,
+    //        "id": 20,
     //        "Title": "The Cleveland Show",
     //        "Img": "cleveland.jpg",
     //        "Video": "cleveland.flv",
@@ -241,8 +245,26 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
             confirmButtonText: "Yes, I'm Done!",
             closeOnConfirm: true
         }, function () {
+
+            //Modify The Played Movies
+
+            for(var i = 0; i < moviesPlayedOrder.length ; i++){
+                for(var x = 0; x < $scope.movies.length ; x++){
+                    if(moviesPlayedOrder[i] == $scope.movies[x].id){
+                        $scope.movies[x]['playedPosition'] = i + 1;
+                        break;
+                    }
+                }
+            }
+
+
             moviesCart.setOrderMovies($scope.movies);
-            
+
+            //console.log("Movies Scope",$scope.movies);
+            //console.log("Played MOvies", moviesPlayedOrder);
+
+
+
             $http.post('api/result', {
                 'user' : User.getUser(),
                 'movies' : $scope.movies
@@ -258,23 +280,46 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
     };
 
 
+    var checkIfExists = function(movieId){
+        for(var i = 0; i < moviesPlayedOrder.length ; i++){
+            if(movieId == moviesPlayedOrder[i]){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    var addMoviePlayed = function(movieId){
+        if(!checkIfExists(movieId)){
+            moviesPlayedOrder.push(movieId);
+            console.log("Adding Movie");
+        }else{
+            console.log('already here');
+        }
+    };
+
     $scope.playMovie = function (movie) {
+
+        addMoviePlayed(movie.id);
+
         console.log(movie);
+        $('#playMovieModal').modal('show');
+
         $scope.selectedMovie = movie;
 
 
-        $('#playMovieModal').modal('show');
-
-
-
         $( "#playMovieModal" ).on('shown.bs.modal', function(){
-            videojs('vidSample');
+           //videojs('vidSample'+movie.id)
+            videojs(document.getElementsByClassName('video-js')[0]);
+
+            console.log('showing modal');
+
         });
 
         $('#playMovieModal').on('hidden.bs.modal', function () {
             //alert('modal Close');
-
-            var playingVid = videojs('vidSample').player();
+            //$scope.$apply();
+            var playingVid = videojs('vidSample'+movie.id).player();
 
             playingVid.pause();
 
@@ -287,6 +332,8 @@ fiuMovies.controller('stepThreeController', function ($scope, $http, moviesCart,
             }else{
                 console.log('never played: ' + playTime);
             }
+            $scope.selectedMovie = null;
+            $scope.$apply();
         });
 
     };

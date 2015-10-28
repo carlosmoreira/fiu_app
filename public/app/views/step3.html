@@ -1,3 +1,9 @@
+<style>
+    .modal-backdrop.in{
+        opacity: 1;
+    }
+</style>
+
 <div class="container">
     <legend>Step 3: Movie Order</legend>
 
@@ -27,11 +33,11 @@
             </div>
             <div class="modal-body">
                 <div ng-if="selectedMovie.Video">
-                    <video id="vidSample" class="video-js vjs-default-skin"
+                    <video id="vidSample{{selectedMovie.id}}" class="video-js vjs-default-skin"
                            controls="true" preload="auto" width="640" height="264"
                            poster="images/thumbs/{{selectedMovie.Img}}"
                            data-setup='{"example_option":true}'>
-                        <source ng-src="{{'videos/' +  selectedMovie.Video}}" type='video/mp4' />
+                        <source src="{{'videos/' +  selectedMovie.Video}}" type='video/mp4' />
                         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
                     </video>
                 </div>

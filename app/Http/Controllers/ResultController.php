@@ -56,6 +56,7 @@ class ResultController extends Controller
             $movieSelection->played = (isset($movie['played'])) ? 1 : 0;
             $movieSelection->watched_length = (isset($movie['watched_length'])) ? $movie['watched_length'] : 0;
             $movieSelection->position = $pos;
+            $movieSelection->playedPosition = (isset($movie['playedPosition'])) ? $movie['playedPosition'] : null;
             $movieSelection->save();
             $pos++;
         }
